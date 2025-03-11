@@ -60,19 +60,22 @@ def display_text():
 
     step = 1
 
+    completion = 0
+
     for x in values:
+
         hpercode = str(x)
         step = step + 1
 
-        history = "SELECT COUNT(*) FROM hmrhisto where hpercode="+hpercode
+        history = "SELECT COUNT(*) FROM hmrhisto where hpercode="+hpercode #NEED TO COUNT
 
         ward = "SELECT wardcode FROM hpatroom where hpercode ="+hpercode
 
-        sas = "SELECT COUNT(*) AS SIGNS_AND_SYMPTOMS FROM hsignsymptoms WHERE enccode LIKE CONCAT('%',"+hpercode+", '%')"
+        sas = "SELECT COUNT(*) AS SIGNS_AND_SYMPTOMS FROM hsignsymptoms WHERE enccode LIKE CONCAT('%',"+hpercode+", '%')" #NEED TO COUNT
 
-        saspe = "SELECT COUNT(*) FROM hphyexam where hpercode="+hpercode
+        saspe = "SELECT COUNT(*) FROM hphyexam where hpercode="+hpercode #NEED TO COUNT
 
-        course_in_the_ward = "select count(*) as COURSE_IN_THE_WARD from hcrsward where hpercode ="+hpercode
+        course_in_the_ward = "select count(*) as COURSE_IN_THE_WARD from hcrsward where hpercode ="+hpercode #NEED TO COUNT
 
         diagnosis = "select tdcode, diagcode as DIAGNOSIS from hencdiag where hpercode ="+hpercode
 
@@ -84,15 +87,25 @@ def display_text():
 
         print("Patient no: "+hpercode)
 
-          #Query 1 History
+    #Query 1 History
 
         mycursor.execute(history)
 
         myresult = mycursor.fetchall()
 
         for x in myresult:
-          print("History: "+str(x[0]))
-          findings_list.append("History: "+str(x[0]))
+
+          
+
+          if str(x[0]) == "0":
+
+              findings_list.append("History: No History")
+
+          else:
+
+              print("History: "+str(x[0]))
+              findings_list.append("History: "+str(x[0]))
+              completion = completion + 1
 
     #Patient Query
 
@@ -134,6 +147,7 @@ def display_text():
           else:
               
               findings_list.append("Ward: "+str(x[0]))
+              
 
           
 
@@ -154,6 +168,7 @@ def display_text():
 
               print("Signs and symptoms: "+str(x[0]))
               findings_list.append("Signs and symptoms: "+str(x[0]))
+              completion = completion + 1
          
 
 
@@ -171,6 +186,7 @@ def display_text():
           else:
               print("PE:"+str(x[0]))
               findings_list.append("PE:"+str(x[0]))
+              completion = completion + 1
          
 
 
@@ -188,6 +204,7 @@ def display_text():
             else:
               print("Course in the ward: "+str(x[0]))
               findings_list.append("Course in the ward: "+str(x[0]))
+              completion = completion + 1
           
 
 
@@ -217,18 +234,38 @@ def display_text():
         for x in myresult:
           print("Doctor: "+' '.join(x))
           findings_list.append("Doctor: "+' '.join(x))
+          if x[0] == "FINDX":
+              completion = completion + 1
 
 
           print("-------------")
           print("------END-------")
 
-        for forms in findings_list:
-            input_value = sheet_obj[column_letter+str(step)]
-            
-        print(findings_list)
-        input_value.value = '||'.join(findings_list)
-        wb_obj.save(path+".xlsx")
-        findings_list.clear()
+        if completion == 5:
+
+            print("Record Complete")
+
+        
+
+        elif completion < 5:
+
+            for forms in findings_list:
+                input_value = sheet_obj[column_letter+str(step)]
+                
+            print(findings_list)
+            input_value.value = '||'.join(findings_list)
+            wb_obj.save(path+".xlsx")
+            findings_list.clear()
+
+            print("Completion:"+" "+str(completion))
+
+        print("--END COMPLETION COUNT RESET--")
+
+        completion = 0
+
+       
+
+        
             
 
     print(findings_list)
@@ -256,6 +293,7 @@ def display_text():
             wb_obj.save(path+".xlsx")
    
     label.configure(text="Report complete!")
+   
 
 #Initialize a Label to display the User Input
 label=Label(win, text="", font=("Courier 22 bold"))
