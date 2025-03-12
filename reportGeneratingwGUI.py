@@ -77,7 +77,7 @@ def display_text():
 
         course_in_the_ward = "select count(*) as COURSE_IN_THE_WARD from hcrsward where hpercode ="+hpercode #NEED TO COUNT
 
-        diagnosis = "select tdcode, diagcode as DIAGNOSIS from hencdiag where hpercode ="+hpercode
+        diagnosis = "select tdcode, diagcode as DIAGNOSIS from hencdiag where tdcode = 'FINDX' and hpercode ="+hpercode
 
         doctor = '''select hencdiag.tdcode, hpersonal.lastname, hpersonal.firstname, hpersonal.middlename from hencdiag inner join hprovider ON hencdiag.licno=hprovider.licno
 
@@ -217,6 +217,12 @@ def display_text():
 
         for x in myresult:
 
+            if str(x[0]) == "FINDX" and str(x[1]) != None:
+
+              completion = completion + 1
+
+            else:
+
               print("Diagnosis: "+str(x[0])+" "+ str(x[1]))
               findings_list.append("Diagnosis: "+str(x[0])+" , "+"ICD: "+" "+str(x[1]))
         
@@ -241,13 +247,13 @@ def display_text():
           print("-------------")
           print("------END-------")
 
-        if completion == 5:
+        if completion == 6:
 
             print("Record Complete")
 
         
 
-        elif completion < 5:
+        elif completion < 6:
 
             for forms in findings_list:
                 input_value = sheet_obj[column_letter+str(step)]
