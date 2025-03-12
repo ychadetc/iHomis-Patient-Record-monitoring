@@ -220,6 +220,7 @@ def display_text():
             if str(x[0]) == "FINDX" and str(x[1]) != None:
 
               completion = completion + 1
+              findings_list.append("Diagnosis: "+str(x[0])+" , "+"ICD: "+" "+str(x[1]))
 
             else:
 
