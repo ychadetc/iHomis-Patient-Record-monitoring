@@ -72,6 +72,8 @@ def display_text():
         ward = "SELECT wardcode FROM hpatroom where hpercode ="+hpercode
 
         sas = "SELECT COUNT(*) AS SIGNS_AND_SYMPTOMS FROM hsignsymptoms WHERE enccode LIKE CONCAT('%',"+hpercode+", '%')" #NEED TO COUNT
+        
+        hpesignsothers = "SELECT COUNT(*) AS SIGNS_AND_SYMPTOMS_OTHERS FROM hpesignsothers WHERE enccode LIKE CONCAT('%',"+hpercode+", '%')" #NEED TO COUNT
 
         saspe = "SELECT COUNT(*) FROM hphyexam where hpercode="+hpercode #NEED TO COUNT
 
@@ -164,6 +166,21 @@ def display_text():
           if str(x[0]) == "0":
 
               findings_list.append("Signs and symptoms: N/A")
+
+              mycursor.execute(hpesignsothers)
+
+              myresult = mycursor.fetchall()
+
+              for y in myresult:
+
+                  if str(y[0]) == "0":
+
+                      findings_list.append("Signs and symptoms: N/A")
+                  else:
+                      print("Signs and symptoms: "+str(y[0]))
+                      findings_list.append("Signs and symptoms: "+str(y[0]))
+                      completion = completion + 1
+                      
           else:
 
               print("Signs and symptoms: "+str(x[0]))
