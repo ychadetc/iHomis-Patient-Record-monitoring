@@ -62,9 +62,9 @@ def display_text():
 
     completion = 0
 
-    for x in values:
+    for z in values:
 
-        hpercode = str(x)
+        hpercode = str(z)
         step = step + 1
 
         history = "SELECT COUNT(*) FROM hmrhisto where hpercode="+hpercode #NEED TO COUNT
@@ -165,7 +165,7 @@ def display_text():
 
           if str(x[0]) == "0":
 
-              findings_list.append("Signs and symptoms: N/A")
+              #findings_list.append("Signs and symptoms: N/A")
 
               mycursor.execute(hpesignsothers)
 
@@ -268,6 +268,7 @@ def display_text():
         if completion == 6:
 
             print("Record Complete")
+            
 
         
 
@@ -279,13 +280,14 @@ def display_text():
             print(findings_list)
             input_value.value = '||'.join(findings_list)
             wb_obj.save(path+".xlsx")
-            findings_list.clear()
+            
 
             print("Completion:"+" "+str(completion))
 
         print("--END COMPLETION COUNT RESET--")
 
         completion = 0
+        findings_list.clear()
 
        
 
